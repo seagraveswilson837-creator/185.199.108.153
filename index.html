@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Verificação de Segurança</title>
+<title>Central de Acesso Seguro</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 
-/* RESET */
 *{
 margin:0;
 padding:0;
@@ -18,7 +17,6 @@ box-sizing:border-box;
 font-family:'Inter',sans-serif;
 }
 
-/* BODY */
 body{
 background:linear-gradient(180deg,#020617,#0f172a);
 color:#fff;
@@ -33,10 +31,10 @@ height:100vh;
 width:100%;
 max-width:420px;
 background:#0f172a;
-border-radius:16px;
+border-radius:20px;
 padding:30px;
 text-align:center;
-box-shadow:0 20px 60px rgba(0,0,0,0.6);
+box-shadow:0 25px 80px rgba(0,0,0,0.8);
 }
 
 /* ICON */
@@ -50,17 +48,17 @@ background:linear-gradient(135deg,#22c55e,#4ade80);
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:30px;
+font-size:28px;
 }
 
-/* TITLE */
+/* TITULO */
 h1{
 font-size:24px;
 margin-bottom:10px;
 }
 
-/* TEXT */
-p{
+/* TEXTO */
+.desc{
 color:#94a3b8;
 font-size:14px;
 margin-bottom:20px;
@@ -77,49 +75,95 @@ color:#fff;
 margin-bottom:15px;
 }
 
-/* BUTTON */
+/* BOTÃO */
 .btn{
 width:100%;
-padding:15px;
+padding:16px;
 border:none;
 border-radius:10px;
 background:linear-gradient(90deg,#22c55e,#16a34a);
 color:white;
-font-weight:600;
+font-weight:700;
 font-size:16px;
 cursor:pointer;
 transition:.2s;
 }
 
 .btn:hover{
-transform:scale(1.03);
+transform:scale(1.04);
+}
+
+/* MICRO COPY */
+.micro{
+font-size:12px;
+color:#64748b;
+margin-top:10px;
 }
 
 /* LOADING */
 .loading{
-margin-top:20px;
 display:none;
+margin-top:20px;
+}
+
+.percent{
+font-size:28px;
+font-weight:700;
 }
 
 .bar{
 width:100%;
-height:8px;
+height:10px;
 background:#1e293b;
 border-radius:10px;
 overflow:hidden;
+margin-top:10px;
 }
 
-.bar-fill{
+.fill{
 height:100%;
 width:0%;
 background:linear-gradient(90deg,#22c55e,#4ade80);
-transition:width .3s;
 }
 
 .status{
 margin-top:10px;
 font-size:13px;
-color:#22c55e;
+color:#4ade80;
+}
+
+/* RESULT */
+.result{
+display:none;
+margin-top:20px;
+text-align:left;
+background:#020617;
+padding:20px;
+border-radius:12px;
+}
+
+.result h2{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.result p{
+font-size:14px;
+color:#cbd5e1;
+}
+
+/* BOTÃO FINAL */
+.final-btn{
+margin-top:15px;
+display:block;
+text-align:center;
+background:#22c55e;
+padding:14px;
+border-radius:10px;
+color:white;
+text-decoration:none;
+font-weight:700;
+font-size:16px;
 }
 
 </style>
@@ -131,23 +175,46 @@ color:#22c55e;
 
 <div class="icon">✔</div>
 
-<h1>Verificação de Segurança</h1>
+<h1>Acesso Seguro</h1>
 
-<p>Confirme seu acesso para continuar com segurança.</p>
+<div class="desc">
+Confirme seu acesso para continuar com segurança.
+</div>
 
 <input type="text" id="nome" class="input" placeholder="Digite seu nome">
 
 <button class="btn" onclick="start()">
-Continuar
+Continuar agora
 </button>
 
-<div class="loading" id="loading">
-
-<div class="bar">
-<div class="bar-fill" id="bar"></div>
+<div class="micro">
+🔒 Seus dados não são armazenados
 </div>
 
-<div class="status" id="status">Iniciando verificação...</div>
+<!-- LOADING -->
+<div class="loading" id="loading">
+
+<div class="percent" id="percent">0%</div>
+
+<div class="bar">
+<div class="fill" id="fill"></div>
+</div>
+
+<div class="status" id="status">Iniciando...</div>
+
+</div>
+
+<!-- RESULT -->
+<div class="result" id="result">
+
+<h2>✔ Acesso liberado</h2>
+
+<p>Seu acesso foi validado com sucesso.</p>
+<p>Você já pode continuar.</p>
+
+<a href="https://iridescent-brigadeiros-ff5c2a.netlify.app/" class="final-btn">
+Continuar para página
+</a>
 
 </div>
 
@@ -170,38 +237,42 @@ document.querySelector(".input").style.display="none"
 let loading = document.getElementById("loading")
 loading.style.display="block"
 
-let bar = document.getElementById("bar")
+let percent = document.getElementById("percent")
+let fill = document.getElementById("fill")
 let status = document.getElementById("status")
 
 let steps = [
-"Verificando conexão...",
+"Iniciando...",
 "Validando segurança...",
-"Checando permissões...",
-"Liberando acesso..."
+"Processando...",
+"Finalizando..."
 ]
 
-let i = 0
 let progress = 0
 
 let interval = setInterval(()=>{
 
-progress += 25
-bar.style.width = progress+"%"
+progress += Math.floor(Math.random()*7)+4
 
-status.innerText = steps[i]
+if(progress > 100) progress = 100
 
-i++
+fill.style.width = progress + "%"
+percent.innerText = progress + "%"
+
+let i = Math.floor(progress/25)
+status.innerText = steps[i] || "Finalizando..."
 
 if(progress >= 100){
 clearInterval(interval)
 
 setTimeout(()=>{
-window.location.href="https://prismatic-crostata-496139.netlify.app/"
-},1000)
+loading.style.display="none"
+document.getElementById("result").style.display="block"
+},800)
 
 }
 
-},800)
+},250)
 
 }
 
